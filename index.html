@@ -518,16 +518,16 @@ function openCheckout(){
   document.getElementById('modalContent').innerHTML = `
     <h3>إتمام الطلب</h3>
     <p class="sub">أدخلي بياناتك لإتمام عملية الشراء</p>
-    <div class="field"><label>الاسم الكامل</label><input type="text" placeholder="مثال: نورة العتيبي"></div>
-    <div class="field"><label>رقم الجوال</label><input type="tel" placeholder="05xxxxxxxx"></div>
+    <div class="field"><label>الاسم الكامل</label><input type="text" id="custName" placeholder="مثال: نورة العتيبي"></div>
+    <div class="field"><label>رقم الجوال</label><input type="tel" id="custPhone" placeholder="05xxxxxxxx"></div>
     <div class="field"><label>المدينة</label>
-      <select>
+      <select id="custCity">
         <option>الرياض</option><option>جدة</option><option>مكة المكرمة</option>
         <option>المدينة المنورة</option><option>الدمام</option><option>الخبر</option>
         <option>الطائف</option><option>أبها</option><option>تبوك</option><option>مدينة أخرى</option>
       </select>
     </div>
-    <div class="field"><label>العنوان التفصيلي</label><input type="text" placeholder="الحي، الشارع، رقم المبنى"></div>
+    <div class="field"><label>العنوان التفصيلي</label><input type="text" id="custAddress" placeholder="الحي، الشارع، رقم المبنى"></div>
 
     <label style="display:block; font-size:13px; font-weight:600; margin-bottom:10px;">طريقة الدفع</label>
     <div class="pay-select">
@@ -551,12 +551,53 @@ function selectPay(val, el){
 function closeModal(){
   document.getElementById('modalOverlay').classList.remove('show');
 }
+const STORE_WHATSAPP = '966531504191';
+const payLabels = {mada:'مدى', visa:'فيزا', mc:'ماستركارد', applepay:'آبل باي'};
+
 function submitOrder(){
+  const name = document.getElementById('custName').value.trim();
+  const phone = document.getElementById('custPhone').value.trim();
+  const city = document.getElementById('custCity').value;
+  const address = document.getElementById('custAddress').value.trim();
+
+  if(!name || !phone || !address){
+    showToast('الرجاء تعبئة الاسم ورقم الجوال والعنوان');
+    return;
+  }
+
+  const sub = cartSubtotal();
+  const ship = sub >= 150 ? 0 : 20;
+  const total = sub + ship;
+
+  const itemsList = Object.entries(cart).map(([id,qty]) => {
+    const p = products.find(x=>x.id==id);
+    return `- ${p.name} × ${qty} = ${fmt(p.price*qty)}`;
+  }).join('\n');
+
+  const message =
+`🌿 طلب جديد من متجر سدرة
+
+👤 الاسم: ${name}
+📱 الجوال: ${phone}
+📍 المدينة: ${city}
+🏠 العنوان: ${address}
+💳 طريقة الدفع: ${payLabels[selectedPay]}
+
+🛍️ المنتجات:
+${itemsList}
+
+المجموع الفرعي: ${fmt(sub)}
+التوصيل: ${ship === 0 ? 'مجاني' : fmt(ship)}
+الإجمالي: ${fmt(total)}`;
+
+  const waUrl = `https://wa.me/${STORE_WHATSAPP}?text=${encodeURIComponent(message)}`;
+  window.open(waUrl, '_blank');
+
   document.getElementById('modalContent').innerHTML = `
     <div class="success-view">
       <div class="ic">🎉</div>
       <h3>شكراً لطلبك!</h3>
-      <p class="sub">تم استلام طلبك بنجاح، سيتواصل فريقنا معك قريباً لتأكيد التوصيل.</p>
+      <p class="sub">تم فتح واتساب لإرسال تفاصيل طلبك — أكملي إرسال الرسالة هناك ليصلنا طلبك.</p>
       <button class="btn btn-primary full-btn" onclick="finishOrder()">تم</button>
     </div>
   `;
