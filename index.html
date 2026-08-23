@@ -246,7 +246,7 @@
 </head>
 <body>
 
-<div class="topbar">🌿 توصيل مجاني للطلبات فوق 150 ر.س داخل جميع مناطق المملكة</div>
+<div class="topbar">🌿 توصيل مجاني للطلبات فوق 199 ر.س داخل جميع مناطق المملكة</div>
 
 <nav>
   <div class="logo">
@@ -495,7 +495,7 @@ function updateCartUI(){
   }).join('');
 
   const sub = cartSubtotal();
-  const ship = sub >= 150 || sub === 0 ? 0 : 20;
+  const ship = sub >= 199 || sub === 0 ? 0 : 20;
   document.getElementById('subtotal').textContent = fmt(sub);
   document.getElementById('shipCost').textContent = ship === 0 ? 'مجاني' : fmt(ship);
   document.getElementById('totalCost').textContent = fmt(sub + ship);
@@ -514,7 +514,7 @@ let selectedPay = 'mada';
 function openCheckout(){
   if(cartCount()===0) return;
   const sub = cartSubtotal();
-  const ship = sub >= 150 ? 0 : 20;
+  const ship = sub >= 199 ? 0 : 20;
   const total = sub + ship;
   document.getElementById('modalContent').innerHTML = `
     <h3>إتمام الطلب</h3>
@@ -572,7 +572,7 @@ function submitOrder(){
   }
 
   const sub = cartSubtotal();
-  const ship = sub >= 150 ? 0 : 20;
+  const ship = sub >= 199 ? 0 : 20;
   const total = sub + ship;
 
   const itemsList = Object.entries(cart).map(([id,qty]) => {
