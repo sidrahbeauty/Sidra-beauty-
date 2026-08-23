@@ -6,6 +6,7 @@
 <title>سدرة | حناء وسدر ومنتجات العناية بالشعر</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Aref+Ruqaa:wght@400;700&family=Tajawal:wght@300;400;500;700;900&family=IBM+Plex+Sans+Arabic:wght@400;500;600&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
 <style>
   :root{
     --cream:#F6F1E2;
@@ -554,6 +555,11 @@ function closeModal(){
 const STORE_WHATSAPP = '966531504191';
 const payLabels = {mada:'مدى', visa:'فيزا', mc:'ماستركارد', applepay:'آبل باي'};
 
+const EMAILJS_PUBLIC_KEY = 'S91byJhIM6Iyi-bvL';
+const EMAILJS_SERVICE_ID = 'service_ctovsax';
+const EMAILJS_TEMPLATE_ID = 'template_6jbysjn';
+emailjs.init(EMAILJS_PUBLIC_KEY);
+
 function submitOrder(){
   const name = document.getElementById('custName').value.trim();
   const phone = document.getElementById('custPhone').value.trim();
@@ -590,6 +596,16 @@ ${itemsList}
 التوصيل: ${ship === 0 ? 'مجاني' : fmt(ship)}
 الإجمالي: ${fmt(total)}`;
 
+  emailjs.send(EMAILJS_SERVICE_ID, EMAILJS_TEMPLATE_ID, {
+    customer_name: name,
+    customer_phone: phone,
+    customer_city: city,
+    customer_address: address,
+    payment_method: payLabels[selectedPay],
+    items_list: itemsList,
+    total_amount: fmt(total)
+  }).catch(err => console.error('EmailJS error:', err));
+
   const waUrl = `https://wa.me/${STORE_WHATSAPP}?text=${encodeURIComponent(message)}`;
   window.open(waUrl, '_blank');
 
@@ -597,7 +613,7 @@ ${itemsList}
     <div class="success-view">
       <div class="ic">🎉</div>
       <h3>شكراً لطلبك!</h3>
-      <p class="sub">تم فتح واتساب لإرسال تفاصيل طلبك — أكملي إرسال الرسالة هناك ليصلنا طلبك.</p>
+      <p class="sub">تم فتح واتساب لإرسال تفاصيل طلبك — أكمل إرسال الرسالة هناك ليصلنا طلبك.</p>
       <button class="btn btn-primary full-btn" onclick="finishOrder()">تم</button>
     </div>
   `;
