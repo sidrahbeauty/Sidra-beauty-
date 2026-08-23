@@ -352,7 +352,6 @@
       <p style="max-width:280px;">متجرك الموثوق لمنتجات الحناء والسدر والعناية الطبيعية بالشعر، بأسعار مخفضة وتوصيل داخل جميع مناطق المملكة العربية السعودية.</p>
       <div class="social-row">
         <a href="#" title="انستقرام">📷</a>
-        <a href="#" title="واتساب">💬</a>
         <a href="#" title="تيك توك">🎵</a>
       </div>
     </div>
@@ -552,7 +551,6 @@ function selectPay(val, el){
 function closeModal(){
   document.getElementById('modalOverlay').classList.remove('show');
 }
-const STORE_WHATSAPP = '966531504191';
 const payLabels = {mada:'مدى', visa:'فيزا', mc:'ماستركارد', applepay:'آبل باي'};
 
 const EMAILJS_PUBLIC_KEY = 'S91byJhIM6Iyi-bvL';
@@ -606,14 +604,11 @@ ${itemsList}
     total_amount: fmt(total)
   }).catch(err => console.error('EmailJS error:', err));
 
-  const waUrl = `https://wa.me/${STORE_WHATSAPP}?text=${encodeURIComponent(message)}`;
-  window.open(waUrl, '_blank');
-
   document.getElementById('modalContent').innerHTML = `
     <div class="success-view">
       <div class="ic">🎉</div>
       <h3>شكراً لطلبك!</h3>
-      <p class="sub">تم فتح واتساب لإرسال تفاصيل طلبك — أكمل إرسال الرسالة هناك ليصلنا طلبك.</p>
+      <p class="sub">تم استلام طلبك بنجاح، سيتم التواصل معك قريباً لتأكيد التفاصيل.</p>
       <button class="btn btn-primary full-btn" onclick="finishOrder()">تم</button>
     </div>
   `;
